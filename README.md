@@ -7,9 +7,6 @@
 </p>
 <br />
 <!-- PROJECT LOGO -->
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo_text.svg" width="320" alt="Nest Logo" /></a>
-</p>
 
 <br />
 <div align="center">
@@ -64,7 +61,9 @@
 
 ### Built With
 
-* [docker](https://www.docker.com/)
+* [pnpm](https://pnpm.io/)
+* [next.js](https://nextjs.org/)
+* [nest.js](https://nestjs.com/)
 
 <p align="right">(<a href="#top">back to top</a>)</p>
 
@@ -82,6 +81,16 @@ To get a local copy up and running follow these simple example steps.
    git clone https://github.com/sweatpotato13/pnpm-monorepo-boilerplate.git
    ```
 
+2. Install dependencies
+   ```sh
+    cd pnpm-monorepo-boilerplate
+    pnpm install
+   ```
+
+3. Run the project
+   ```sh
+    pnpm start
+   ```
 <p align="right">(<a href="#top">back to top</a>)</p>
 
 

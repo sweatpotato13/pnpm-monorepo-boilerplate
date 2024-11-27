@@ -45,23 +45,23 @@ services:
             --unsafe-rpc-external
             --rpc-cors all
             --dev
-    # file-upload-server:
-    #     container_name: file-upload-server
+    # backend:
+    #     container_name: backend
     #     restart: always
     #     build:
     #         dockerfile: Dockerfile
-    #         context: ./packages/file-upload-server
+    #         context: ./packages/backend
     #     env_file: 
     #         - .env
     #     ports:
     #         - 8000:8000
-    # main-server:
-    #     container_name: main-server
+    # frontend:
+    #     container_name: frontend
     #     restart: always
     #     build:
     #         dockerfile: Dockerfile
-    #         context: ./packages/main-server
+    #         context: ./packages/frontend
     #     env_file: 
     #         - .env
     #     ports:
-    #         - 8001:8000
+    #         - 3000:3000
