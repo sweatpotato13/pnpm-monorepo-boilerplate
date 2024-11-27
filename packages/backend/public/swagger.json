@@ -1,0 +1,1384 @@
+{
+    "openapi": "3.1.0",
+    "servers": [
+        {
+            "url": "http://localhost:8000",
+            "description": "Local Server"
+        }
+    ],
+    "info": {
+        "version": "0.0.1",
+        "title": "renkei-backend",
+        "description": "",
+        "license": {
+            "name": "UNLICENSED"
+        }
+    },
+    "paths": {
+        "/": {
+            "get": {
+                "description": "Healthcheck endpoint",
+                "tags": ["app"],
+                "parameters": [],
+                "responses": {
+                    "200": {
+                        "description": "\"OK\" string",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/ResultResponseDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/challenge/{address}": {
+            "get": {
+                "summary": "Retrieve a challenge for a given user",
+                "description": "Retrieve a challenge for a given user.\nThis challenge is used to sign a message that will be used to authenticate the user.",
+                "tags": ["auth"],
+                "parameters": [
+                    {
+                        "name": "address",
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A promise that resolves to the challenge response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetChallengeResponseDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/challenge": {
+            "post": {
+                "summary": "Create a new challenge",
+                "description": "Create a new challenge.",
+                "tags": ["auth"],
+                "parameters": [],
+                "requestBody": {
+                    "description": "- The body parameters for creating the challenge.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateChallengeBodyDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "201": {
+                        "description": "A promise that resolves to the challenge creation response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateChallengeResponseDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/token": {
+            "post": {
+                "summary": "Create a new token",
+                "description": "Create a new token.",
+                "tags": ["auth"],
+                "parameters": [],
+                "requestBody": {
+                    "description": "- The body parameters for creating the token.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateTokenBodyDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "A promise that resolves to the token creation response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateTokenResponseDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/auth/refresh": {
+            "post": {
+                "summary": "Refresh an existing token",
+                "description": "Refresh an existing token.",
+                "tags": ["auth"],
+                "parameters": [],
+                "requestBody": {
+                    "description": "- The body parameters for refreshing the token.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RefreshTokenBodyDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "A promise that resolves to the token refresh response.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RefreshTokenResponseDto"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/comment/{pointedProfileId}/{pointedPublicationId}": {
+            "get": {
+                "summary": "Retrieves comments for a specific profile and publication",
+                "description": "Retrieves comments for a specific profile and publication.",
+                "tags": ["comment"],
+                "parameters": [
+                    {
+                        "name": "pointedProfileId",
+                        "in": "path",
+                        "schema": {
+                            "type": "number"
+                        },
+                        "required": true,
+                        "title": "- The ID of the profile being pointed to",
+                        "description": " - The ID of the profile being pointed to."
+                    },
+                    {
+                        "name": "pointedPublicationId",
+                        "in": "path",
+                        "schema": {
+                            "type": "number"
+                        },
+                        "required": true,
+                        "title": "- The ID of the publication being pointed to",
+                        "description": " - The ID of the publication being pointed to."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "- A promise that resolves to the comments response DTO.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetCommentsResponseDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/comment": {
+            "post": {
+                "summary": "Creates a new comment",
+                "description": "Creates a new comment.",
+                "tags": ["comment"],
+                "parameters": [],
+                "requestBody": {
+                    "description": "- The DTO containing the data required to create a comment.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateCommentBodyDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "- A promise that resolves to the create comment response DTO.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateCommentResponseDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "delete": {
+                "summary": "Removes an existing comment",
+                "description": "Removes an existing comment.",
+                "tags": ["comment"],
+                "parameters": [],
+                "requestBody": {
+                    "description": "- The DTO containing the data required to remove a comment.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RemoveCommentBodyDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "- A promise that resolves to the remove comment response DTO.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RemoveCommentResponseDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/profile/{address}": {
+            "get": {
+                "summary": "Retrieves profiles by address",
+                "description": "Retrieves profiles by address.",
+                "tags": ["profile"],
+                "parameters": [
+                    {
+                        "name": "address",
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "title": "- The address to search profiles by",
+                        "description": " - The address to search profiles by."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The profiles associated with the given address.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetProfilesByAddressResponseDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/profile/default/{address}": {
+            "get": {
+                "summary": "Retrieves the default profile by address",
+                "description": "Retrieves the default profile by address.",
+                "tags": ["profile"],
+                "parameters": [
+                    {
+                        "name": "address",
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "title": "- The address to search the default profile by",
+                        "description": " - The address to search the default profile by."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The default profile associated with the given address.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetDefaultProfileByAddressResponseDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/profile/{profileId}": {
+            "get": {
+                "summary": "Retrieves a profile by its ID",
+                "description": "Retrieves a profile by its ID.",
+                "tags": ["profile"],
+                "parameters": [
+                    {
+                        "name": "profileId",
+                        "in": "path",
+                        "schema": {
+                            "type": "number"
+                        },
+                        "required": true,
+                        "title": "- The ID of the profile to retrieve",
+                        "description": " - The ID of the profile to retrieve."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The profile associated with the given ID.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetProfileByIdResponseDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/profile/handle/{handle}": {
+            "get": {
+                "summary": "Retrieves a profile by its handle",
+                "description": "Retrieves a profile by its handle.",
+                "tags": ["profile"],
+                "parameters": [
+                    {
+                        "name": "handle",
+                        "in": "path",
+                        "schema": {
+                            "type": "string"
+                        },
+                        "required": true,
+                        "title": "- The handle of the profile to retrieve",
+                        "description": " - The handle of the profile to retrieve."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "The profile associated with the given handle.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetProfileByHandleResponseDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/profile": {
+            "post": {
+                "summary": "Creates a new profile",
+                "description": "Creates a new profile.",
+                "tags": ["profile"],
+                "parameters": [],
+                "requestBody": {
+                    "description": "- The data required to create a new profile.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreateProfileBodyDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "The created profile.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreateProfileResponseDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/profile/default": {
+            "post": {
+                "summary": "Sets a profile as the default profile",
+                "description": "Sets a profile as the default profile.",
+                "tags": ["profile"],
+                "parameters": [],
+                "requestBody": {
+                    "description": "- The data required to set a profile as default.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SetDefaultProfileBodyDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "The response after setting the default profile.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SetDefaultProfileResponseDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/profile/image": {
+            "post": {
+                "summary": "Sets the profile image",
+                "description": "Sets the profile image.",
+                "tags": ["profile"],
+                "parameters": [],
+                "requestBody": {
+                    "description": "- The data required to set the profile image.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/SetProfileImageBodyDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "The response after setting the profile image.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SetProfileImageResponseDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/publication/{profileId}": {
+            "get": {
+                "summary": "Retrieves publications by profile ID",
+                "description": "Retrieves publications by profile ID.",
+                "tags": ["publication"],
+                "parameters": [
+                    {
+                        "name": "profileId",
+                        "in": "path",
+                        "schema": {
+                            "type": "number"
+                        },
+                        "required": true,
+                        "title": "- The ID of the profile",
+                        "description": " - The ID of the profile."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A promise that resolves to GetPublicationsByProfileIdResponseDto.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetPublicationsByProfileIdResponseDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/publication/{profileId}/{publicationId}": {
+            "get": {
+                "summary": "Retrieves a specific publication by profile ID and publication ID",
+                "description": "Retrieves a specific publication by profile ID and publication ID.",
+                "tags": ["publication"],
+                "parameters": [
+                    {
+                        "name": "profileId",
+                        "in": "path",
+                        "schema": {
+                            "type": "number"
+                        },
+                        "required": true,
+                        "title": "- The ID of the profile",
+                        "description": " - The ID of the profile."
+                    },
+                    {
+                        "name": "publicationId",
+                        "in": "path",
+                        "schema": {
+                            "type": "number"
+                        },
+                        "required": true,
+                        "title": "- The ID of the publication",
+                        "description": " - The ID of the publication."
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "A promise that resolves to GetPublicationResponseDto.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/GetPublicationResponseDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        },
+        "/publication": {
+            "post": {
+                "summary": "Creates a new publication",
+                "description": "Creates a new publication.",
+                "tags": ["publication"],
+                "parameters": [],
+                "requestBody": {
+                    "description": "- The data required to create a publication.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/CreatePublicationBodyDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "A promise that resolves to CreatePublicationResponseDto.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CreatePublicationResponseDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            },
+            "delete": {
+                "summary": "Removes a publication",
+                "description": "Removes a publication.",
+                "tags": ["publication"],
+                "parameters": [],
+                "requestBody": {
+                    "description": "- The data required to remove a publication.",
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/RemovePublicationBodyDto"
+                            }
+                        }
+                    },
+                    "required": true
+                },
+                "responses": {
+                    "200": {
+                        "description": "A promise that resolves to RemovePublicationResponseDto.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/RemovePublicationResponseDto"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearer": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "ResultResponseDto": {
+                "type": "object",
+                "properties": {
+                    "result": {
+                        "type": "string",
+                        "title": "The result of the response",
+                        "description": "The result of the response."
+                    }
+                },
+                "required": ["result"],
+                "description": "Data Transfer Object (DTO) for representing a result response."
+            },
+            "GetChallengeResponseDto": {
+                "type": "object",
+                "properties": {
+                    "challenge": {
+                        "type": "string",
+                        "title": "The challenge string",
+                        "description": "The challenge string."
+                    }
+                },
+                "required": ["challenge"],
+                "description": "Data Transfer Object for GetChallengeResponse.\nThis class is used to encapsulate the response data for a challenge request."
+            },
+            "CreateChallengeResponseDto": {
+                "type": "object",
+                "properties": {
+                    "challenge": {
+                        "type": "string",
+                        "title": "The challenge string",
+                        "description": "The challenge string."
+                    }
+                },
+                "required": ["challenge"],
+                "description": "Represents the response DTO for creating a challenge."
+            },
+            "CreateChallengeBodyDto": {
+                "type": "object",
+                "properties": {
+                    "address": {
+                        "type": "string",
+                        "title": "The address associated with the challenge",
+                        "description": "The address associated with the challenge."
+                    }
+                },
+                "required": ["address"],
+                "description": "Data Transfer Object for creating a challenge."
+            },
+            "CreateTokenResponseDto": {
+                "type": "object",
+                "properties": {
+                    "accessToken": {
+                        "type": "string",
+                        "title": "The access token string",
+                        "description": "The access token string."
+                    },
+                    "refreshToken": {
+                        "type": "string",
+                        "title": "The refresh token string",
+                        "description": "The refresh token string."
+                    }
+                },
+                "required": ["accessToken", "refreshToken"],
+                "description": "Data Transfer Object (DTO) for creating a token response."
+            },
+            "CreateTokenBodyDto": {
+                "type": "object",
+                "properties": {
+                    "address": {
+                        "type": "string",
+                        "title": "The address associated with the token",
+                        "description": "The address associated with the token."
+                    },
+                    "signature": {
+                        "type": "string",
+                        "title": "The signature associated with the token",
+                        "description": "The signature associated with the token."
+                    }
+                },
+                "required": ["address", "signature"],
+                "description": "Data Transfer Object for creating a token."
+            },
+            "RefreshTokenResponseDto": {
+                "type": "object",
+                "properties": {
+                    "accessToken": {
+                        "type": "string",
+                        "title": "The access token string",
+                        "description": "The access token string."
+                    },
+                    "refreshToken": {
+                        "type": "string",
+                        "title": "The refresh token string",
+                        "description": "The refresh token string."
+                    }
+                },
+                "required": ["accessToken", "refreshToken"],
+                "description": "Data Transfer Object (DTO) for the response containing the refreshed tokens."
+            },
+            "RefreshTokenBodyDto": {
+                "type": "object",
+                "properties": {
+                    "refreshToken": {
+                        "type": "string",
+                        "title": "The refresh token string",
+                        "description": "The refresh token string."
+                    }
+                },
+                "required": ["refreshToken"],
+                "description": "Data Transfer Object (DTO) for handling refresh token requests."
+            },
+            "GetCommentsResponseDto": {
+                "type": "object",
+                "properties": {
+                    "comments": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Comment"
+                        },
+                        "title": "List of comments",
+                        "description": "List of comments."
+                    }
+                },
+                "required": ["comments"],
+                "description": "Data Transfer Object for getting comments response."
+            },
+            "Comment": {
+                "type": "object",
+                "properties": {
+                    "commentId": {
+                        "type": "number"
+                    },
+                    "profileId": {
+                        "type": "number"
+                    },
+                    "contentUri": {
+                        "type": "string"
+                    },
+                    "timestamp": {
+                        "type": "string"
+                    }
+                },
+                "required": [
+                    "commentId",
+                    "profileId",
+                    "contentUri",
+                    "timestamp"
+                ]
+            },
+            "CreateCommentResponseDto": {
+                "type": "object",
+                "properties": {
+                    "txHash": {
+                        "type": "string",
+                        "title": "The transaction hash associated with the comment",
+                        "description": "The transaction hash associated with the comment."
+                    }
+                },
+                "required": ["txHash"],
+                "description": "Data Transfer Object for creating a comment response."
+            },
+            "CreateCommentBodyDto": {
+                "type": "object",
+                "properties": {
+                    "action": {
+                        "$ref": "#/components/schemas/CreateCommentDto",
+                        "title": "The action to be performed, represented as a CreateCommentDto object",
+                        "description": "The action to be performed, represented as a CreateCommentDto object."
+                    },
+                    "signature": {
+                        "type": "string",
+                        "title": "The signature of the actor performing the action",
+                        "description": "The signature of the actor performing the action."
+                    },
+                    "actor": {
+                        "type": "string",
+                        "title": "The actor performing the action",
+                        "description": "The actor performing the action."
+                    }
+                },
+                "required": ["action", "signature", "actor"],
+                "description": "Data Transfer Object for creating a comment body."
+            },
+            "CreateCommentDto": {
+                "type": "object",
+                "properties": {
+                    "profileId": {
+                        "type": "number",
+                        "title": "The ID of the profile creating the comment",
+                        "description": "The ID of the profile creating the comment."
+                    },
+                    "profileIdPointed": {
+                        "type": "number",
+                        "title": "The ID of the profile being pointed to by the comment",
+                        "description": "The ID of the profile being pointed to by the comment."
+                    },
+                    "publicationIdPointed": {
+                        "type": "number",
+                        "title": "The ID of the publication being pointed to by the comment",
+                        "description": "The ID of the publication being pointed to by the comment."
+                    },
+                    "contentUri": {
+                        "type": "string",
+                        "title": "The URI of the content of the comment",
+                        "description": "The URI of the content of the comment."
+                    }
+                },
+                "required": [
+                    "profileId",
+                    "profileIdPointed",
+                    "publicationIdPointed",
+                    "contentUri"
+                ],
+                "description": "Data Transfer Object for creating a comment."
+            },
+            "RemoveCommentResponseDto": {
+                "type": "object",
+                "properties": {
+                    "txHash": {
+                        "type": "string",
+                        "title": "The transaction hash associated with the removal of the comment",
+                        "description": "The transaction hash associated with the removal of the comment."
+                    }
+                },
+                "required": ["txHash"],
+                "description": "Data Transfer Object for the response of removing a comment."
+            },
+            "RemoveCommentBodyDto": {
+                "type": "object",
+                "properties": {
+                    "action": {
+                        "$ref": "#/components/schemas/RemoveCommentDto",
+                        "title": "The action to be performed for removing the comment",
+                        "description": "The action to be performed for removing the comment."
+                    },
+                    "signature": {
+                        "type": "string",
+                        "title": "The signature of the actor performing the action",
+                        "description": "The signature of the actor performing the action."
+                    },
+                    "actor": {
+                        "type": "string",
+                        "title": "The actor performing the action",
+                        "description": "The actor performing the action."
+                    }
+                },
+                "required": ["action", "signature", "actor"],
+                "description": "Data Transfer Object for removing a comment."
+            },
+            "RemoveCommentDto": {
+                "type": "object",
+                "properties": {
+                    "profileId": {
+                        "type": "number",
+                        "title": "The ID of the profile initiating the removal",
+                        "description": "The ID of the profile initiating the removal."
+                    },
+                    "commentId": {
+                        "type": "number",
+                        "title": "The ID of the comment to be removed",
+                        "description": "The ID of the comment to be removed."
+                    },
+                    "profileIdPointed": {
+                        "type": "number",
+                        "title": "The ID of the profile that is pointed to by the comment",
+                        "description": "The ID of the profile that is pointed to by the comment."
+                    },
+                    "publicationIdPointed": {
+                        "type": "number",
+                        "title": "The ID of the publication that is pointed to by the comment",
+                        "description": "The ID of the publication that is pointed to by the comment."
+                    }
+                },
+                "required": [
+                    "profileId",
+                    "commentId",
+                    "profileIdPointed",
+                    "publicationIdPointed"
+                ],
+                "description": "Data Transfer Object for removing a comment."
+            },
+            "GetProfilesByAddressResponseDto": {
+                "type": "object",
+                "properties": {
+                    "profiles": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "profileId": {
+                                    "type": "number"
+                                },
+                                "profile": {
+                                    "$ref": "#/components/schemas/Profile"
+                                }
+                            },
+                            "required": ["profileId", "profile"]
+                        },
+                        "title": "Array of profiles",
+                        "description": "Array of profiles."
+                    }
+                },
+                "required": ["profiles"],
+                "description": "Data Transfer Object for getting profiles by address response."
+            },
+            "Profile": {
+                "type": "object",
+                "properties": {
+                    "handle": {
+                        "type": "string"
+                    },
+                    "imageUri": {
+                        "type": "string"
+                    }
+                },
+                "required": ["handle", "imageUri"]
+            },
+            "GetDefaultProfileByAddressResponseDto": {
+                "type": "object",
+                "properties": {
+                    "profileId": {
+                        "type": "number",
+                        "title": "The ID of the profile",
+                        "description": "The ID of the profile."
+                    },
+                    "profile": {
+                        "$ref": "#/components/schemas/Profile",
+                        "title": "The profile object",
+                        "description": "The profile object."
+                    }
+                },
+                "required": ["profileId", "profile"],
+                "description": "Data Transfer Object for the response of getting the default profile by address."
+            },
+            "GetProfileByIdResponseDto": {
+                "type": "object",
+                "properties": {
+                    "profileId": {
+                        "type": "number",
+                        "title": "The unique identifier of the profile",
+                        "description": "The unique identifier of the profile."
+                    },
+                    "profile": {
+                        "$ref": "#/components/schemas/Profile",
+                        "title": "The profile object",
+                        "description": "The profile object."
+                    }
+                },
+                "required": ["profileId", "profile"],
+                "description": "Data Transfer Object for getting a profile by ID response."
+            },
+            "GetProfileByHandleResponseDto": {
+                "type": "object",
+                "properties": {
+                    "profileId": {
+                        "type": "number",
+                        "title": "The unique identifier of the profile",
+                        "description": "The unique identifier of the profile."
+                    },
+                    "profile": {
+                        "$ref": "#/components/schemas/Profile",
+                        "title": "The profile object",
+                        "description": "The profile object."
+                    }
+                },
+                "required": ["profileId", "profile"],
+                "description": "Data Transfer Object for the response of getting a profile by handle."
+            },
+            "CreateProfileResponseDto": {
+                "type": "object",
+                "properties": {
+                    "txHash": {
+                        "type": "string",
+                        "title": "The transaction hash associated with the comment",
+                        "description": "The transaction hash associated with the comment."
+                    }
+                },
+                "required": ["txHash"],
+                "description": "Data Transfer Object for creating a profile response."
+            },
+            "CreateProfileBodyDto": {
+                "type": "object",
+                "properties": {
+                    "action": {
+                        "$ref": "#/components/schemas/CreateProfileDto",
+                        "title": "The action object containing profile creation details",
+                        "description": "The action object containing profile creation details."
+                    },
+                    "signature": {
+                        "type": "string",
+                        "title": "The signature string",
+                        "description": "The signature string."
+                    },
+                    "actor": {
+                        "type": "string",
+                        "title": "The actor string",
+                        "description": "The actor string."
+                    }
+                },
+                "required": ["action", "signature", "actor"],
+                "description": "Data Transfer Object for creating a profile."
+            },
+            "CreateProfileDto": {
+                "type": "object",
+                "properties": {
+                    "profileId": {
+                        "type": "number",
+                        "title": "The unique identifier for the profile",
+                        "description": "The unique identifier for the profile."
+                    },
+                    "profile": {
+                        "type": "object",
+                        "properties": {
+                            "handle": {
+                                "type": "string"
+                            },
+                            "imageUri": {
+                                "type": "string"
+                            }
+                        },
+                        "required": ["handle", "imageUri"],
+                        "title": "The profile details including handle and image URI",
+                        "description": "The profile details including handle and image URI."
+                    }
+                },
+                "required": ["profileId", "profile"],
+                "description": "Data Transfer Object for creating a profile."
+            },
+            "SetDefaultProfileResponseDto": {
+                "type": "object",
+                "properties": {
+                    "txHash": {
+                        "type": "string",
+                        "title": "The transaction hash associated with the comment",
+                        "description": "The transaction hash associated with the comment."
+                    }
+                },
+                "required": ["txHash"],
+                "description": "Represents the response DTO for setting a default profile."
+            },
+            "SetDefaultProfileBodyDto": {
+                "type": "object",
+                "properties": {
+                    "action": {
+                        "$ref": "#/components/schemas/SetDefaultProfileDto",
+                        "title": "The action to set the default profile",
+                        "description": "The action to set the default profile."
+                    },
+                    "signature": {
+                        "type": "string",
+                        "title": "The signature for the action",
+                        "description": "The signature for the action."
+                    },
+                    "actor": {
+                        "type": "string",
+                        "title": "The actor performing the action",
+                        "description": "The actor performing the action."
+                    }
+                },
+                "required": ["action", "signature", "actor"],
+                "description": "Data Transfer Object for setting the default profile."
+            },
+            "SetDefaultProfileDto": {
+                "type": "object",
+                "properties": {
+                    "profileId": {
+                        "type": "number",
+                        "title": "The ID of the profile to be set as default",
+                        "description": "The ID of the profile to be set as default."
+                    }
+                },
+                "required": ["profileId"],
+                "description": "Data Transfer Object (DTO) for setting the default profile."
+            },
+            "SetProfileImageResponseDto": {
+                "type": "object",
+                "properties": {
+                    "txHash": {
+                        "type": "string",
+                        "title": "The transaction hash associated with the comment",
+                        "description": "The transaction hash associated with the comment."
+                    }
+                },
+                "required": ["txHash"],
+                "description": "Represents the response DTO for setting a profile image."
+            },
+            "SetProfileImageBodyDto": {
+                "type": "object",
+                "properties": {
+                    "action": {
+                        "$ref": "#/components/schemas/SetProfileImageDto",
+                        "title": "The action to set the profile image",
+                        "description": "The action to set the profile image."
+                    },
+                    "signature": {
+                        "type": "string",
+                        "title": "The signature for the action",
+                        "description": "The signature for the action."
+                    },
+                    "actor": {
+                        "type": "string",
+                        "title": "The actor performing the action",
+                        "description": "The actor performing the action."
+                    }
+                },
+                "required": ["action", "signature", "actor"],
+                "description": "Data Transfer Object for setting a profile image."
+            },
+            "SetProfileImageDto": {
+                "type": "object",
+                "properties": {
+                    "profileId": {
+                        "type": "number",
+                        "title": "The unique identifier of the profile",
+                        "description": "The unique identifier of the profile."
+                    },
+                    "imageUri": {
+                        "type": "string",
+                        "title": "The URI of the image to be set as the profile image",
+                        "description": "The URI of the image to be set as the profile image."
+                    }
+                },
+                "required": ["profileId", "imageUri"],
+                "description": "Data Transfer Object (DTO) for setting a profile image."
+            },
+            "GetPublicationsByProfileIdResponseDto": {
+                "type": "object",
+                "properties": {
+                    "publications": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Publication"
+                        },
+                        "title": "List of publications",
+                        "description": "List of publications."
+                    }
+                },
+                "required": ["publications"],
+                "description": "Data Transfer Object for getting publications by profile ID."
+            },
+            "Publication": {
+                "type": "object",
+                "properties": {
+                    "publicationId": {
+                        "type": "number"
+                    },
+                    "contentUri": {
+                        "type": "string"
+                    },
+                    "timestamp": {
+                        "type": "string"
+                    }
+                },
+                "required": ["publicationId", "contentUri", "timestamp"]
+            },
+            "GetPublicationResponseDto": {
+                "type": "object",
+                "properties": {
+                    "publication": {
+                        "$ref": "#/components/schemas/Publication",
+                        "title": "The publication object",
+                        "description": "The publication object."
+                    }
+                },
+                "required": ["publication"],
+                "description": "Data Transfer Object (DTO) for getting a publication response."
+            },
+            "CreatePublicationResponseDto": {
+                "type": "object",
+                "properties": {
+                    "txHash": {
+                        "type": "string",
+                        "title": "The transaction hash",
+                        "description": "The transaction hash."
+                    }
+                },
+                "required": ["txHash"],
+                "description": "Data Transfer Object for creating a publication response."
+            },
+            "CreatePublicationBodyDto": {
+                "type": "object",
+                "properties": {
+                    "action": {
+                        "$ref": "#/components/schemas/CreatePublicationDto",
+                        "title": "The action to be performed, must be a valid object",
+                        "description": "The action to be performed, must be a valid object."
+                    },
+                    "signature": {
+                        "type": "string",
+                        "title": "The signature of the actor, must be a valid string",
+                        "description": "The signature of the actor, must be a valid string."
+                    },
+                    "actor": {
+                        "type": "string",
+                        "title": "The actor performing the action, must be a valid string",
+                        "description": "The actor performing the action, must be a valid string."
+                    }
+                },
+                "required": ["action", "signature", "actor"],
+                "description": "Data Transfer Object for creating a publication body."
+            },
+            "CreatePublicationDto": {
+                "type": "object",
+                "properties": {
+                    "profileId": {
+                        "type": "number",
+                        "title": "The ID of the profile creating the publication",
+                        "description": "The ID of the profile creating the publication."
+                    },
+                    "publication": {
+                        "type": "object",
+                        "properties": {
+                            "contentUri": {
+                                "type": "string"
+                            }
+                        },
+                        "required": ["contentUri"],
+                        "title": "The publication content, including its URI",
+                        "description": "The publication content, including its URI."
+                    }
+                },
+                "required": ["profileId", "publication"],
+                "description": "Data Transfer Object for creating a publication."
+            },
+            "RemovePublicationResponseDto": {
+                "type": "object",
+                "properties": {
+                    "txHash": {
+                        "type": "string",
+                        "title": "The transaction hash associated with the removal of the publication",
+                        "description": "The transaction hash associated with the removal of the publication."
+                    }
+                },
+                "required": ["txHash"],
+                "description": "Data Transfer Object for removing a publication response."
+            },
+            "RemovePublicationBodyDto": {
+                "type": "object",
+                "properties": {
+                    "action": {
+                        "$ref": "#/components/schemas/RemovePublicationDto",
+                        "title": "The action to be performed, must be a valid RemovePublicationDto object",
+                        "description": "The action to be performed, must be a valid RemovePublicationDto object."
+                    },
+                    "signature": {
+                        "type": "string",
+                        "title": "The signature of the actor performing the action",
+                        "description": "The signature of the actor performing the action."
+                    },
+                    "actor": {
+                        "type": "string",
+                        "title": "The actor performing the action",
+                        "description": "The actor performing the action."
+                    }
+                },
+                "required": ["action", "signature", "actor"],
+                "description": "Data Transfer Object for removing a publication."
+            },
+            "RemovePublicationDto": {
+                "type": "object",
+                "properties": {
+                    "profileId": {
+                        "type": "number",
+                        "title": "The ID of the profile",
+                        "description": "The ID of the profile."
+                    },
+                    "publicationId": {
+                        "type": "number",
+                        "title": "The ID of the publication",
+                        "description": "The ID of the publication."
+                    }
+                },
+                "required": ["profileId", "publicationId"],
+                "description": "Data Transfer Object for removing a publication."
+            }
+        },
+        "securitySchemes": {
+            "bearer": {
+                "type": "apiKey",
+                "name": "Authorization",
+                "in": "header"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "app"
+        },
+        {
+            "name": "auth"
+        },
+        {
+            "name": "comment"
+        },
+        {
+            "name": "profile"
+        },
+        {
+            "name": "publication"
+        }
+    ],
+    "x-samchon-emended": true
+}

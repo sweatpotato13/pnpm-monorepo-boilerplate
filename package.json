@@ -1,0 +1,32 @@
+{
+    "name": "pnpm-monorepo-boilerplate",
+    "version": "0.0.1",
+    "description": "",
+    "author": "Cute_Wisp",
+    "private": true,
+    "license": "UNLICENSED",
+    "workspaces": [
+        "packages/*"
+    ],
+    "scripts": {
+        "build": "pnpm -r  build",
+        "start": "pnpm -r  start",
+        "lint": "pnpm -r  lint",
+        "prettier": "pnpm -r  prettier",
+        "start:dev": "pnpm --filter backend start:dev",
+        "start:debug": "pnpm --filter backend start:debug",
+        "start:prod": "pnpm --filter backend start:prod",
+        "test": "pnpm --filter backend test",
+        "test:watch": "pnpm --filter backend test:watch",
+        "test:cov": "pnpm --filter backend test:cov",
+        "test:debug": "pnpm --filter backend test:debug",
+        "test:e2e": "pnpm --filter backend test:e2e",
+        "sdk": "pnpm --filter backend sdk",
+        "swagger": "pnpm --filter backend swagger",
+        "dev": "pnpm --filter frontend dev"
+    },
+    "devDependencies": {
+        "@commitlint/cli": "^19.5.0",
+        "@commitlint/config-conventional": "^19.5.0"
+    }
+}
