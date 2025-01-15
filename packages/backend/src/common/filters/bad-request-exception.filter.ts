@@ -16,7 +16,7 @@ export class BadRequestExceptionFilter
         const response = ctx.getResponse();
         const statusCode = exception.getStatus();
 
-        logger.error(`Error: ${JSON.stringify(exception.getResponse())}`);
+        logger.error(exception.getResponse());
         response.status(statusCode).json(
             config.isProduction
                 ? {

@@ -4,7 +4,6 @@ import {
     ExceptionFilter,
     HttpException
 } from "@nestjs/common";
-import { logger } from "@src/config/modules/winston";
 
 @Catch(HttpException)
 export class HttpExceptionFilter implements ExceptionFilter<HttpException> {
@@ -14,7 +13,6 @@ export class HttpExceptionFilter implements ExceptionFilter<HttpException> {
         const request = ctx.getRequest();
         const statusCode = exception.getStatus();
 
-        logger.error(`Error: ${JSON.stringify(exception.getResponse())}`);
         response.status(statusCode).json({
             statusCode,
             message: exception.message,

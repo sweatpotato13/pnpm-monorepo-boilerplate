@@ -1,4 +1,5 @@
 import rTracer from "cls-rtracer";
+import moment from "moment";
 import {
     addColors,
     createLogger,
@@ -58,24 +59,42 @@ const loggerOptions: LoggerOptions = {
         timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
         align(),
         splat(),
-        // prettyPrint(),
-        // colorize(),
         logFormat
     ),
-    // defaultMeta: { service: "user-service" },
     transports: [
-        //
-        // - Write to all logs with level `info` and below to `combined.log`
-        // - Write all logs error (and below) to `error.log`.
-        //
-        // new transports.Console(),
         new transports.Console({
-            level: "info",
+            level: "debug",
             handleExceptions: true
         }),
-        new transports.Console({
+        new transports.File({
+            filename: `logs/info/${moment().format("YYYY-MM-DD")}`,
+            level: "info",
+            handleExceptions: true,
+            zippedArchive: true
+        }),
+        new transports.File({
+            filename: `logs/error/${moment().format("YYYY-MM-DD")}`,
             level: "error",
-            handleExceptions: true
+            handleExceptions: true,
+            zippedArchive: true
+        }),
+        new transports.File({
+            filename: `logs/warn/${moment().format("YYYY-MM-DD")}`,
+            level: "warn",
+            handleExceptions: true,
+            zippedArchive: true
+        }),
+        new transports.File({
+            filename: `logs/debug/${moment().format("YYYY-MM-DD")}`,
+            level: "debug",
+            handleExceptions: true,
+            zippedArchive: true
+        }),
+        new transports.File({
+            filename: `logs/verbose/${moment().format("YYYY-MM-DD")}`,
+            level: "verbose",
+            handleExceptions: true,
+            zippedArchive: true
         })
     ],
     exitOnError: false

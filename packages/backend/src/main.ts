@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { config } from "@config";
 import { ValidationPipe } from "@nestjs/common";
+import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 import { NestExpressApplication } from "@nestjs/platform-express";
 import { OpenAPIObject, SwaggerModule } from "@nestjs/swagger";
@@ -10,14 +11,13 @@ import rateLimit from "express-rate-limit";
 import fs from "fs";
 import helmet from "helmet";
 import morgan from "morgan";
-import { initializeTransactionalContext } from "typeorm-transactional";
 
 import { AppModule } from "./app.module";
 import { BadRequestExceptionFilter } from "./common/filters/bad-request-exception.filter";
+import { HttpExceptionFilter } from "./common/filters/http-exception.filter";
 import { TimeoutInterceptor } from "./common/interceptors/timeout.interceptor";
+import { KafkaConfigService } from "./config/modules/kafka/kafka.config.service";
 import { errorStream, logger } from "./config/modules/winston";
-
-initializeTransactionalContext();
 
 async function bootstrap() {
     try {
@@ -28,11 +28,31 @@ async function bootstrap() {
         app.useGlobalPipes(new ValidationPipe());
         app.useGlobalFilters(new BadRequestExceptionFilter());
         app.useGlobalInterceptors(new TimeoutInterceptor());
+        app.useGlobalFilters(new HttpExceptionFilter());
         app.use(helmet());
 
         app.use(rTracer.expressMiddleware());
 
         app.use(json({ limit: "50mb" }));
+
+        const configService = app.get(ConfigService);
+        const kafkaConfig = configService.get("kafka");
+
+        // connect kafka only when kafkaConfig is set
+        if (
+            kafkaConfig?.brokerEndpoint &&
+            kafkaConfig?.clientId &&
+            kafkaConfig?.groupId
+        ) {
+            app.connectMicroservice(
+                new KafkaConfigService(kafkaConfig).createClientOptions()
+            );
+            await app.startAllMicroservices();
+            logger.info(
+                `🚀  Kafka connected at ${kafkaConfig.brokerEndpoint}`,
+                { context: "BootStrap" }
+            );
+        }
 
         // Swagger
         const swagger = JSON.parse(
@@ -86,7 +106,6 @@ async function bootstrap() {
             next();
         });
 
-        await app.startAllMicroservices();
         await app.listen(config.port, () => {
             !config.isProduction
                 ? logger.info(
@@ -112,4 +131,4 @@ async function bootstrap() {
     }
 }
 
-bootstrap();
+void bootstrap();

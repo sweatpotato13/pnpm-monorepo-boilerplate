@@ -18,7 +18,9 @@ const compat = new FlatCompat({
 export default eslintTs.config(
     eslintJs.configs.recommended,
     ...eslintTs.configs.recommendedTypeChecked,
-    ...compat.extends("prettier"),
+    ...compat.extends(
+        "prettier"
+    ),
     {
         ignores: ["**/types.d.ts", "**/*.js", "**/node_modules/"]
     },
@@ -45,7 +47,7 @@ export default eslintTs.config(
         plugins: {
             "@typescript-eslint": tseslint.plugin,
             "simple-import-sort": simpleImportSortPlugin,
-            security: pluginSecurity.configs.recommended
+            security: pluginSecurity.configs.recommended,
         },
         rules: {
             "no-empty-pattern": "off",
@@ -55,8 +57,6 @@ export default eslintTs.config(
             "@typescript-eslint/no-unsafe-assignment": "off",
             "@typescript-eslint/no-unsafe-argument": "off",
             "@typescript-eslint/no-explicit-any": "off",
-            "@typescript-eslint/no-floating-promises": "off",
-            "no-useless-catch": "off",
             "simple-import-sort/imports": "error",
             "simple-import-sort/exports": "error",
             semi: "error"

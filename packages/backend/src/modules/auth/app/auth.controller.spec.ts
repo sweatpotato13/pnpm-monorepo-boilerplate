@@ -1,23 +1,21 @@
+import { ConfigType } from "@nestjs/config";
 import { Test, TestingModule } from "@nestjs/testing";
+import { GoogleOauthConfig } from "@src/config";
+import { BaseResponseDto } from "@src/shared/dtos";
+import httpMocks from "node-mocks-http";
 
-import {
-    CreateChallengeBodyDto,
-    CreateChallengeResponseDto,
-    CreateTokenBodyDto,
-    CreateTokenResponseDto,
-    GetChallengeResponseDto,
-    RefreshTokenBodyDto,
-    RefreshTokenResponseDto
-} from "../domain/dtos";
+import { TokensResponseDto } from "../domain/dtos";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
 
 const mockAuthService: Partial<AuthService> = {
-    healthCheck: jest.fn(),
-    getChallenge: jest.fn(),
-    createChallenge: jest.fn(),
-    createToken: jest.fn(),
-    refreshToken: jest.fn()
+    googleLogin: jest.fn()
+};
+
+const mockGoogleConfig: ConfigType<typeof GoogleOauthConfig> = {
+    clientId: "mock-client-id",
+    clientSecret: "mock-client-secret",
+    redirect: "mock-redirect"
 };
 
 describe("AuthController", () => {
@@ -25,80 +23,49 @@ describe("AuthController", () => {
 
     beforeEach(async () => {
         const module: TestingModule = await Test.createTestingModule({
-            controllers: [AuthController],
-            providers: [{ provide: "AuthService", useValue: mockAuthService }]
+            providers: [
+                { provide: "AuthService", useValue: mockAuthService },
+                {
+                    provide: GoogleOauthConfig.KEY,
+                    useValue: mockGoogleConfig
+                }
+            ],
+            controllers: [AuthController]
         }).compile();
 
         authController = module.get<AuthController>(AuthController);
     });
 
-    it("should be defined", () => {
-        expect(authController).toBeDefined();
-    });
-
-    describe("GET /challenge", () => {
-        it("should return GetChallengeResponseDto", async () => {
-            const address: string =
-                "0x1234567890123456789012345678901234567890";
-            const result: GetChallengeResponseDto = GetChallengeResponseDto.of({
-                challenge: "challenge"
+    describe("GET /auth/login/google", () => {
+        it("should return result when Google auth is enabled", () => {
+            const resp = BaseResponseDto.of({
+                message: "Google Authentication"
             });
-            jest.spyOn(mockAuthService, "getChallenge").mockResolvedValue(
-                result
-            );
 
-            expect(await authController.getChallenge(address)).toBe(result);
+            expect(authController.handleLogin()).toStrictEqual(resp);
         });
     });
 
-    describe("POST /challenge", () => {
-        it("should return CreateChallengeResponseDto", async () => {
-            const args: CreateChallengeBodyDto = {
-                address: "0x1234567890123456789012345678901234567890"
-            };
-            const result: CreateChallengeResponseDto = {
-                challenge: "challenge"
-            };
-            jest.spyOn(mockAuthService, "createChallenge").mockResolvedValue(
-                result
-            );
-
-            expect(await authController.createChallenge(args)).toBe(result);
-        });
-    });
-
-    describe("POST /token", () => {
-        it("should return CreateTokenResponseDto", async () => {
-            const args: CreateTokenBodyDto = CreateTokenBodyDto.of({
-                address: "0x1234567890123456789012345678901234567890",
-                signature: "signature"
+    describe("GET /auth/login/google/callback", () => {
+        it("should return tokens when Google auth is enabled", async () => {
+            const args = httpMocks.createRequest({
+                method: "GET",
+                url: "/auth/google/callback",
+                user: {
+                    email: "test@test.com",
+                    name: "test",
+                    provider: "google",
+                    providerId: "id"
+                }
             });
-            const result: CreateTokenResponseDto = CreateTokenResponseDto.of({
-                accessToken: "at",
-                refreshToken: "rt"
+            const resp = TokensResponseDto.of({
+                accessToken: "accessToken",
+                refreshToken: "refreshToken"
             });
-            jest.spyOn(mockAuthService, "createToken").mockResolvedValue(
-                result
-            );
 
-            expect(await authController.createToken(args)).toBe(result);
-        });
-    });
+            jest.spyOn(mockAuthService, "googleLogin").mockResolvedValue(resp);
 
-    describe("POST /refresh", () => {
-        it("should return RefreshTokenResponseDto", async () => {
-            const args: RefreshTokenBodyDto = RefreshTokenBodyDto.of({
-                refreshToken: "rt"
-            });
-            const result: RefreshTokenResponseDto = RefreshTokenResponseDto.of({
-                accessToken: "newat",
-                refreshToken: "newrt"
-            });
-            jest.spyOn(mockAuthService, "refreshToken").mockResolvedValue(
-                result
-            );
-
-            expect(await authController.refreshToken(args)).toBe(result);
+            expect(await authController.handleRedirect(args)).toBe(resp);
         });
     });
 });

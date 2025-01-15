@@ -1,24 +1,18 @@
-import { Controller, Get } from "@nestjs/common";
-
-import { ResultResponseDto } from "./shared/dtos";
+import { Controller, Get, HttpCode, HttpStatus } from "@nestjs/common";
 
 @Controller("")
 export class AppController {
     constructor() {}
 
     /**
-     * Healthcheck endpoint
-     * @returns "OK" string
+     * Health check endpoint.
+     * @returns A Promise that resolves to the health check result.
+     * @throws Throws an error if an error occurs during the health check.
      *
-     * @tag app
      */
     @Get()
-    healthCheck(): ResultResponseDto {
-        try {
-            const result = ResultResponseDto.of({ result: "OK" });
-            return result;
-        } catch (error) {
-            throw error;
-        }
+    @HttpCode(HttpStatus.OK)
+    healthCheck(): string {
+        return "ok";
     }
 }

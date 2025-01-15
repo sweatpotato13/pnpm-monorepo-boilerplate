@@ -6,7 +6,12 @@ import { JwtService } from "./jwt.service";
 
 @Module({
     imports: [ConfigModule.forFeature(JwtModuleConfig)],
-    providers: [JwtService],
-    exports: [JwtModule, JwtService]
+    providers: [
+        {
+            provide: "JwtService",
+            useClass: JwtService
+        }
+    ],
+    exports: ["JwtService"]
 })
 export class JwtModule {}

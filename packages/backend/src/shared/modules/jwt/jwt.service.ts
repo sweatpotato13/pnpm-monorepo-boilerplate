@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-expressions */
 import { Inject, Injectable } from "@nestjs/common";
 import { ConfigType } from "@nestjs/config";
 import { JwtModuleConfig } from "@src/config";
@@ -9,19 +10,21 @@ export class JwtService {
 
     constructor(
         @Inject(JwtModuleConfig.KEY)
-        private readonly _config: ConfigType<typeof JwtModuleConfig>
+        private readonly config: ConfigType<typeof JwtModuleConfig>
     ) {}
 
-    public createJwt(address: string): {
+    public createUserJwt(userId: string): {
         accessToken: string;
         refreshToken: string;
     } {
+        this.config.refreshExpiresIn;
+        this.config.accessExpiresIn;
         const accessTokenPayload = {
-            address,
+            userId,
             type: "accessToken"
         };
         const refreshTokenPayload = {
-            address,
+            userId,
             type: "refreshToken"
         };
         const accessToken = this.signJwt(accessTokenPayload, true);
@@ -30,29 +33,27 @@ export class JwtService {
     }
 
     public signJwt(payload: object, isAccessToken: boolean): string {
-        return jwt.sign(payload, this._config.privateKey, {
-            algorithm: this._config.algorithm as Algorithm,
+        return jwt.sign(payload, this.config.privateKey, {
+            algorithm: this.config.algorithm as Algorithm,
             expiresIn: isAccessToken
-                ? this._config.accessExpiresIn
-                : this._config.refreshExpiresIn
+                ? this.config.accessExpiresIn
+                : this.config.refreshExpiresIn
         });
     }
 
     public async decodeJwt(
         token: string
-    ): Promise<{ address: string; type: string } | null> {
+    ): Promise<{ userId: string; type: string } | null> {
         return new Promise(resolve => {
             jwt.verify(
                 token,
-                this._config.publicKey,
+                this.config.publicKey,
                 {
-                    algorithms: [this._config.algorithm as Algorithm]
+                    algorithms: [this.config.algorithm as Algorithm]
                 },
                 (err, decoded) => {
                     if (err) return resolve(null);
-                    return resolve(
-                        decoded as { address: string; type: string }
-                    );
+                    return resolve(decoded as { userId: string; type: string });
                 }
             );
         });

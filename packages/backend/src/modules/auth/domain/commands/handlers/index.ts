@@ -1,4 +1,3 @@
-import { CreateChallengeHandler } from "./create-challenge.handler";
-import { CreateTokenHandler } from "./create-token.handler";
+import { GoogleLoginHandler } from "./google-login.handler";
 
-export const CommandHandlers = [CreateChallengeHandler, CreateTokenHandler];
+export const CommandHandlers = [GoogleLoginHandler];

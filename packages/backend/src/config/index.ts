@@ -1,27 +1,35 @@
-/* eslint-disable @typescript-eslint/unbound-method */
 import { config as _config } from "dotenv";
 _config({ path: __dirname + "/../../.env" });
-(process as any).send = process.send || function () {};
+if (typeof process.send !== "function") {
+    (process as any).send = () => {};
+}
 
+import ElasticsearchConfig from "./modules/elasticsearch/elasticsearch";
 import JwtModuleConfig from "./modules/jwt";
+import KafkaConfg from "./modules/kafka/kafka";
+import MongooseConfig from "./modules/mongoose/mongoose";
+import GoogleOauthConfig from "./modules/passport/google";
 import RedisModuleConfig from "./modules/redis";
-import TypeOrmModuleConfig from "./modules/typeorm/typeorm";
 
-export { JwtModuleConfig, RedisModuleConfig, TypeOrmModuleConfig };
+export {
+    ElasticsearchConfig,
+    GoogleOauthConfig,
+    JwtModuleConfig,
+    KafkaConfg,
+    MongooseConfig,
+    RedisModuleConfig
+};
 
 export const config = {
     // Base
     isProduction: process.env.NODE_ENV === "production",
     // General
-    appName: process.env.APP_NAME || "renkei-backend",
-    appTitle: process.env.APP_TITLE || "renkei-backend",
-    appDescription:
-        process.env.APP_DESCRIPTION || "server for subconnect sns server",
+    appName: process.env.APP_NAME || "boilerplate",
+    appTitle: process.env.APP_TITLE || "boilerplate",
+    appDescription: process.env.APP_DESCRIPTION || "boilerplate",
     // Server
     host: process.env.HOST || "0.0.0.0",
-    port: parseInt(process.env.PORT || "8001"),
+    port: parseInt(process.env.PORT || "8000"),
     rateLimitMax: parseInt(process.env.RATE_LIMIT_MAX || "10000"),
-    appSecret: process.env.APP_SECRET || "secret",
-    chainWsEndpoint: process.env.CHAIN_WS_ENDPOINT || "ws://localhost:9944",
-    signerAccountSeed: process.env.SIGNER_ACCOUNT_SEED || "//Alice"
+    appSecret: process.env.APP_SECRET || "secret"
 };

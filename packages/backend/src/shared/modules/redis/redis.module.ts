@@ -6,7 +6,12 @@ import { RedisService } from "./redis.service";
 
 @Module({
     imports: [ConfigModule.forFeature(RedisModuleConfig)],
-    providers: [RedisService],
-    exports: [RedisService]
+    providers: [
+        {
+            provide: "RedisService",
+            useClass: RedisService
+        }
+    ],
+    exports: ["RedisService"]
 })
 export class RedisModule {}
