@@ -20,7 +20,7 @@ jobs:
       working-directory: .
       run: |
         pnpm install
-        yarn build
+        pnpm build
   test:
     runs-on: ubuntu-latest
     strategy:

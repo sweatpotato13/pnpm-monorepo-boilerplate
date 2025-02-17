@@ -6,17 +6,13 @@ const {
 module.exports = {
     preset: "ts-jest",
     testEnvironment: "node",
-    globals: {
-        "ts-jest": {
-            tsConfig: "<rootDir>/tsconfig.json",
-            diagnostics: false
-        }
-    },
     moduleFileExtensions: ["ts", "tsx", "js", "jsx", "json", "node"],
     roots: ["<rootDir>/src"],
     testRegex: "./src/.*\\.(test|spec)?\\.(ts|ts)$",
     transform: {
-        "^.+\\.(t|j)s$": "ts-jest"
+        "^.+\\.(t|j)s$": ["ts-jest", {
+            tsconfig: "tsconfig.json"
+        }]
     },
     coverageDirectory: "./coverage",
     moduleNameMapper: pathsToModuleNameMapper(paths, {
